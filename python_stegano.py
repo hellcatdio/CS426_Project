@@ -254,9 +254,7 @@ def main() -> None:
     args = parser.parse_args()
 
     try:
-        if args.command == "hide":
-            hide_message(args.image, args.message, args.output)
-        elif args.command == "batch-hide":
+        if args.command == "batch-hide":
             batch_hide_messages(args.dataset, args.message, args.output_dir)
         elif args.command == "reveal":
             reveal_message(args.image, args.save)
