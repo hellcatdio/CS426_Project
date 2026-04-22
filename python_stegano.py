@@ -26,6 +26,8 @@ DEFAULT_BATCH_OUTPUT_DIR = BASE_DIR / "ENCODED"
 DEFAULT_REPORT_FILE = BASE_DIR /"batch_report.csv"
 SUPPORTED_IMAGE_TYPES = {".png", ".bmp"}
 
+# ____________ Validating Functions ____________
+
 #Checks if a file exists.
 def require_existing_file(path: Path, description: str) -> Path:
     if not path.is_file():
@@ -48,6 +50,8 @@ def read_message(message_path: Path) -> str:
     if not message.strip():
         raise ValueError("The message file is empty.")
     return message
+
+# ____________ Image Comparison Functions ____________
 
 # This function counts how many pixels changed between two images.
 def count_changed_pixels(original: Image.Image, encoded: Image.Image) -> int:
@@ -75,11 +79,15 @@ def compare_images(original_path: Path, encoded_path: Path) -> dict[str, object]
             "changed_pixels": changed_pixels,
         }
 
+# ___________ File Output Function ____________
+
 #Decides where the output images will be saved and how they will be named.
 def build_output_path(image_path: Path, output_path: Path | None) -> Path:
     if output_path is not None:
         return output_path
     return image_path.with_name(f"{image_path.stem}_hidden{image_path.suffix.lower()}")
+
+#_____________ Reveal Function _____________
 
 #Decryption function that reveals the hidden message from the image.
 def reveal_message(image_path: Path, save_path: Path | None) -> str:
@@ -90,14 +98,17 @@ def reveal_message(image_path: Path, save_path: Path | None) -> str:
     if revealed_message is None:
         raise ValueError("No hidden message was found in that image.")
 
-    print("\nHidden message:")
+    print("\nHidden message:\n -")
     print(revealed_message)
+    print("\n")
 
     if save_path is not None:
         save_path.write_text(revealed_message, encoding="utf-8")
         print(f"\nRecovered message saved to: {save_path}")
 
     return revealed_message
+
+# ____________ Dataset/CSV Functions ____________
 
 #Collects all supported images from the specified folder and returns them as a list of paths.
 def list_images(dataset_dir: Path) -> list[Path]:
@@ -152,6 +163,8 @@ def verify_hidden_message(
         **comparison,
         "message_matches": message_matches,
     }
+
+# ____________ Batch Hide Function ____________
 
 #This function hides the same message inside every image in the dataset folder.
 def batch_hide_messages(
@@ -289,6 +302,8 @@ def format_examples(image_files: Iterable[Path]) -> str:
         "  python steganography_tool.py reveal --image ENCODED/your_image_hidden.png --save recovered_message.txt"
     )
 
+# _____________ Command-Line Interface _____________
+
 #Makes our command-line parser
 def build_parser() -> argparse.ArgumentParser:
     dataset_images = list_images(DEFAULT_DATASET_DIR)
@@ -300,13 +315,6 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    hide_parser = subparsers.add_parser("hide", help="Hide the contents of a text file in an image.")
-    hide_parser.add_argument(
-        "--message",
-        type=Path,
-        default=DEFAULT_MESSAGE_FILE,
-        help="Path to the text file to hide. Defaults to message.txt in the project folder.",
-    )
     batch_parser = subparsers.add_parser(
         "batch-hide",
         help="Hide the same text file in every PNG or BMP image inside a folder.",
@@ -349,6 +357,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     return parser
+
+# ____________ Main Function _____________
 
 #Our Main Function
 def main() -> None:
