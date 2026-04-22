@@ -11,10 +11,7 @@ For Pythons Stegano Library
 
 python_stegano.py - Our Python Algorithm that uses the Stegano Python library.
 In order to run, ensure python_stegano.py, your message .txt file, and a folder with the images you want to embed are all within the same folder
-For Example: ./project
-                -/DATASET
-                -message.txt
-               -python_stegano.py
+
 After that ensure you have python installed.
   Check by running in terminal: 
    python --version OR py --version
