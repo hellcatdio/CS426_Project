@@ -268,7 +268,7 @@ def batch_hide_messages(
                     "Encoded File Name": output_file.name,
                     "Original Image Type": original_type,
                     "Encoded Image Type": encoded_type,
-                    "Status": "failed",
+                    "Status": "Failed",
                     "Details": str(error),
                 }
             )
