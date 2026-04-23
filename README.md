@@ -4,6 +4,9 @@ _______
 
 This is the README for our Final Project for our course, CS426 - Digital Forensics.
 
+There are two files you can utilize with various word lengths.
+- message.txt (approx. 69 words)
+- i_am_groot.txt (approx. 200,000+ words)
 ______
  For Pythons Stegano Library
 
