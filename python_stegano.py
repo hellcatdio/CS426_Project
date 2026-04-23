@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import time
 from pathlib import Path
 from typing import Iterable
 
@@ -18,7 +19,7 @@ except ImportError as error:
 #My directory.
 BASE_DIR = Path(r"C:\Users\rosaf\OneDrive\Documents\GitHub\CS426_Project")
 #File that contains the message we want to hide.
-DEFAULT_MESSAGE_FILE = BASE_DIR / "message.txt"
+DEFAULT_MESSAGE_FILE = BASE_DIR / "i_am_groot.txt"
 #Folder where all the images we want to hide messages in are located.
 DEFAULT_DATASET_DIR = BASE_DIR / "DATASET"
 #Where we will save the encoded images with hidden messages.
@@ -142,6 +143,7 @@ def write_batch_report(report_path: Path, report_rows: list[dict[str, str]]) -> 
                 "Encoded File Name",
                 "Original Image Type",
                 "Encoded Image Type",
+                "Execution Time(s)",
                 "Status",
                 "Details"
             ],
@@ -174,6 +176,7 @@ def batch_hide_messages(
     report_path: Path,
 ) -> None:
     
+    batch_start_time = time.perf_counter()
     dataset_files = list_dataset_files(dataset_dir)
     if not dataset_files:
         raise ValueError(f"No files were found in {dataset_dir}.")
@@ -198,6 +201,8 @@ def batch_hide_messages(
     print(f"CSV report will be saved to: {report_path}")
 
     for index, image_path in enumerate(dataset_files, start = 1):
+        file_start_time = time.perf_counter()
+
         original_type = image_path.suffix.lower() or "unknown"
         output_file = output_dir / f"{image_path.stem}_hidden{image_path.suffix.lower()}"
         encoded_type = output_file.suffix.lower() or "unknown"
@@ -211,6 +216,7 @@ def batch_hide_messages(
                     "Encoded File Name": "",
                     "Original Image Type": original_type,
                     "Encoded Image Type": "",
+                    "Execution Time(s)": f"{time.perf_counter() - file_start_time:.6f}",
                     "Status": "Skipped",
                     "Details": "Unsupported image type",
                 }
@@ -238,6 +244,7 @@ def batch_hide_messages(
                         "Encoded File Name": output_file.name,
                         "Original Image Type": original_type,
                         "Encoded Image Type": encoded_type,
+                        "Execution Time(s)": f"{time.perf_counter() - file_start_time:.6f}",
                         "Status": "Success",
                         "Details": "Message encoded and verified",
                     }
@@ -253,6 +260,7 @@ def batch_hide_messages(
                         "Encoded File Name": output_file.name,
                         "Original Image Type": original_type,
                         "Encoded Image Type": encoded_type,
+                        "Execution Time(s)": f"{time.perf_counter() - file_start_time:.6f}",
                         "Status": "Failed",
                         "Details": "Verification failed",
                     }
@@ -268,12 +276,27 @@ def batch_hide_messages(
                     "Encoded File Name": output_file.name,
                     "Original Image Type": original_type,
                     "Encoded Image Type": encoded_type,
+                    "Execution Time(s)": f"{time.perf_counter() - file_start_time:.6f}",
                     "Status": "Failed",
                     "Details": str(error),
                 }
             )
             print(f"[FAILED] {image_path.name} -> {error}")
     
+    total_batch_time = time.perf_counter() - batch_start_time
+    report_rows.append(
+        {
+            "Index": "",
+            "Original File Name": "",
+            "Encoded File Name": "",
+            "Original Image Type": "",
+            "Encoded Image Type": "",
+            "Execution Time(s)": f"{total_batch_time:.6f}",
+            "Status": "summary",
+            "Details": "Total batch processing time",
+        }
+    )
+
     write_batch_report(report_path, report_rows)
 
     print("\nBatch summary:")
@@ -281,6 +304,7 @@ def batch_hide_messages(
     print(f"- Successful encodes    : {success_count}")
     print(f"- Skipped files         : {skipped_count}")
     print(f"- Failed encodes        : {failure_count}")
+    print(f"- Total batch time (s)  : {total_batch_time:.6f}")
     print(f"- CSV report saved to   : {report_path}")
 
     if failed_files:
