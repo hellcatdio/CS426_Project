@@ -19,7 +19,7 @@ except ImportError as error:
 #My directory.
 BASE_DIR = Path(r"C:\Users\rosaf\OneDrive\Documents\GitHub\CS426_Project")
 #File that contains the message we want to hide.
-DEFAULT_MESSAGE_FILE = BASE_DIR / "i_am_groot.txt"
+DEFAULT_MESSAGE_FILE = BASE_DIR / "message.txt"
 #Folder where all the images we want to hide messages in are located.
 DEFAULT_DATASET_DIR = BASE_DIR / "DATASET"
 #Where we will save the encoded images with hidden messages.
