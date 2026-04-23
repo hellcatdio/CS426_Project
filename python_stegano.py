@@ -17,14 +17,14 @@ except ImportError as error:
 
 #Where we point to our files and folders.
 #My directory.
-BASE_DIR = Path(r"C:\Users\rosaf\OneDrive\Documents\GitHub\CS426_Project")
+BASE_DIR = Path(r"C:\ADD_YOUR_PATH_HERE")
 #File that contains the message we want to hide.
-DEFAULT_MESSAGE_FILE = BASE_DIR / "message.txt"
+DEFAULT_MESSAGE_FILE = BASE_DIR / "ADD_YOUR_MESSAGE_FILE_HERE.txt"
 #Folder where all the images we want to hide messages in are located.
-DEFAULT_DATASET_DIR = BASE_DIR / "DATASET"
+DEFAULT_DATASET_DIR = BASE_DIR / "ADD_YOUR_DATASET_FOLDER_HERE"
 #Where we will save the encoded images with hidden messages.
-DEFAULT_BATCH_OUTPUT_DIR = BASE_DIR / "ENCODED"
-DEFAULT_REPORT_FILE = BASE_DIR /"batch_report.csv"
+DEFAULT_BATCH_OUTPUT_DIR = BASE_DIR / "ADD_YOUR_OUTPUT_FOLDER_HERE"
+DEFAULT_REPORT_FILE = BASE_DIR /"ADD_YOUR_REPORT_FILE_HERE.csv"
 SUPPORTED_IMAGE_TYPES = {".png", ".bmp"}
 
 # ____________ Validating Functions ____________
